@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">ProyectoPOLI</string>
+    <string name="app_slogan">
+        ¡Bienvenido a PetSocial!\n
+        Comparte momentos,\n
+        conoce nuevas mascotas\n
+        y crea recuerdos inolvidables.\n
+        ¡Tu amigo peludo ya tiene\n
+        su propia red social!
+        Prueba
+    </string>
 </resources>

@@ -29,6 +29,7 @@ fun MenuFragment(
     onOptionSelected: (String) -> Unit
 ) {
     val menuItems = listOf(
+        //MenuItem(id = "inicio", title = "Inicio", icon = Icons.Default.AccountCircle),
         MenuItem(id = "perfil", title = "Perfil", icon = Icons.Default.AccountCircle),
         MenuItem(id = "fotos", title = "Fotos", icon = Icons.Default.Image),
         MenuItem(id = "videos", title = "Videos", icon = Icons.Default.Videocam),

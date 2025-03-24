@@ -1,29 +1,16 @@
 package com.example.proyectopoli.screens
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.example.proyectopoli.navigation.ContentNavigation
 import com.example.proyectopoli.screens.fragments.content.menu.MenuFragment
 import kotlinx.coroutines.launch
@@ -33,7 +20,12 @@ import kotlinx.coroutines.launch
 fun HomeScreen() {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-    var selectedOption by remember { mutableStateOf("perfil") }
+    var selectedOption by remember { mutableStateOf("inicio") }
+
+    // 🎨 Degradado azul oscuro SOLO para el TopAppBar
+    val topBarGradient = Brush.horizontalGradient(
+        colors = listOf(Color(0xFF1A237E), Color(0xFF536DFE)) // Azul oscuro a azul intermedio
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -43,9 +35,7 @@ fun HomeScreen() {
                     selectedOption = selectedOption,
                     onOptionSelected = { option ->
                         selectedOption = option
-                        scope.launch {
-                            drawerState.close()
-                        }
+                        scope.launch { drawerState.close() }
                     }
                 )
             }
@@ -54,27 +44,39 @@ fun HomeScreen() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("ProyectoPOLI") },
+                    title = { Text("PetSocial",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyLarge ) },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {
-                                if (drawerState.isClosed) {
-                                    drawerState.open()
-                                } else {
-                                    drawerState.close()
-                                }
+                                if (drawerState.isClosed) drawerState.open()
+                                else drawerState.close()
                             }
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Menu,
-                                contentDescription = "Menu"
+                                contentDescription = "Menu",
+                                tint = Color.White // Icono en blanco para mejor visibilidad
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(onClick  = {}) {
+                            Icon(
+                                imageVector = Icons.Default.MoreVert,
+                                contentDescription = "Configuración",
+                                tint = Color.White
                             )
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                        containerColor = Color.Transparent, // Lo hacemos transparente
+                        titleContentColor = Color.White
+                    ),
+                    modifier = Modifier
+                        .background(topBarGradient) // 🔥 Aplicamos el degradado aquí
+
                 )
             }
         ) { paddingValues ->
@@ -82,10 +84,13 @@ fun HomeScreen() {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),
-                color = MaterialTheme.colorScheme.background
+                color = MaterialTheme.colorScheme.background // Fondo sin degradado
             ) {
                 ContentNavigation(selectedOption = selectedOption)
             }
         }
     }
 }
+
+
+
