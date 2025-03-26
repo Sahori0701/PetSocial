@@ -10,6 +10,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyectopoli.navigation.ContentNavigation
 import com.example.proyectopoli.screens.fragments.content.menu.MenuFragment
@@ -17,7 +19,9 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview
 fun HomeScreen() {
+    val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedOption by remember { mutableStateOf("inicio") }
@@ -74,6 +78,7 @@ fun HomeScreen() {
                         containerColor = Color.Transparent, // Lo hacemos transparente
                         titleContentColor = Color.White
                     ),
+                    scrollBehavior = scrollBehavior,
                     modifier = Modifier
                         .background(topBarGradient) // 🔥 Aplicamos el degradado aquí
 

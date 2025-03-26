@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="body">
+        <item name="android:fontFamily">PT Serif</item>
+        <item name="android:textColor">#FF343F4B</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style></resources>

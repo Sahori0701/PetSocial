@@ -19,11 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyectopoli.model.MenuItem
 import com.example.proyectopoli.ui.theme.components.DrawerItem
 
 @Composable
+
 fun MenuFragment(
     selectedOption: String,
     onOptionSelected: (String) -> Unit

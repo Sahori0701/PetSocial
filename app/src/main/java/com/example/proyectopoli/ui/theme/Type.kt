@@ -22,9 +22,9 @@ val Typography = Typography(
     // Estilo para el cuerpo de texto mediano
     bodyMedium = TextStyle(
         fontFamily = FontFamily.Serif, // Usar Serif para un estilo más elegante
-        fontWeight = FontWeight.W700, // Negrita
-        color = Color(0xFF333333),
-        fontSize = 20.sp, // Tamaño de la letra
+        //fontWeight = FontWeight.Bold, // Negrita
+        color = Color(0xFF343F4B),
+        fontSize = 23.sp, // Tamaño de la letra
         lineHeight = 28.sp, // Espaciado entre líneas
         letterSpacing = 0.5.sp // Espaciado entre letras
     ),
@@ -38,11 +38,12 @@ val Typography = Typography(
     ),
     // Estilo para títulos grandes
     headlineLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = FontFamily.Serif,
+        color = Color(0xFF343F4B),
         fontWeight = FontWeight.Bold,
-        fontSize = 32.sp,
+        fontSize = 33.sp,
         lineHeight = 40.sp,
-        letterSpacing = 0.sp
+        letterSpacing = 0.5.sp
     ),
     // Estilo para títulos medianos
     headlineMedium = TextStyle(
