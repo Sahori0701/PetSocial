@@ -10,21 +10,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.proyectopoli.R
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppBarMain(title: String, onSettingsClick: () -> Unit, onMenuClick: () -> Unit) {
+
+fun AppBarMain(
+    title: String,
+    onSettingsClick: () -> Unit,
+    onMenuClick: () -> Unit
+) {
     TopAppBar(
         title = {
             Box( modifier = Modifier.padding(all = 12.dp), contentAlignment = Alignment.Center){
                 Text(
                 text = title,
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
+                //style = MaterialTheme.typography.headlineLarge,
+                //textAlign = TextAlign.Center
             )
 
         }},

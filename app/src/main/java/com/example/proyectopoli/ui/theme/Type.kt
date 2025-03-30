@@ -13,9 +13,9 @@ import androidx.compose.ui.unit.sp
 
 val Typography = Typography(
         bodyLarge = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp,
+        fontSize = 22.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.25.sp
     ),
@@ -43,15 +43,16 @@ val Typography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 33.sp,
         lineHeight = 40.sp,
-        letterSpacing = 0.5.sp
+        letterSpacing = 0.3.sp
     ),
     // Estilo para títulos medianos
     headlineMedium = TextStyle(
-        fontFamily = FontFamily.Default,
+        fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Bold,
+        color = Color.White,
         fontSize = 24.sp,
         lineHeight = 32.sp,
-        letterSpacing = 0.sp
+        letterSpacing = 0.5.sp
     ),
     // Estilo para títulos pequeños
     headlineSmall = TextStyle(

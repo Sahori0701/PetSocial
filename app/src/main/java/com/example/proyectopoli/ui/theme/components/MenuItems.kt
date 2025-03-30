@@ -14,19 +14,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.proyectopoli.model.MenuItem
 
 @Composable
+
 fun DrawerItem(
     item: MenuItem,
     selected: Boolean,
     onItemClick: (MenuItem) -> Unit
 ) {
     val backgroundColor = if (selected) {
-        MaterialTheme.colorScheme.primaryContainer
+        MaterialTheme.colorScheme.primary
     } else {
         MaterialTheme.colorScheme.surface
+    }
+    val contentColor = if (selected) {
+        MaterialTheme.colorScheme.onPrimary  // Color del texto e ícono cuando está seleccionado
+    } else {
+        MaterialTheme.colorScheme.onSurface
     }
 
     Row(
@@ -40,14 +47,14 @@ fun DrawerItem(
         Icon(
             imageVector = item.icon,
             contentDescription = item.title,
-            tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            tint = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = item.title,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
-            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = if (selected) FontWeight.Bold else FontWeight.Bold,
+            color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
         )
     }
 }

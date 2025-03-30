@@ -1,6 +1,7 @@
 package com.example.proyectopoli.screens.fragments.content
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -28,10 +31,19 @@ import com.example.proyectopoli.R
 fun InicioFragment() {
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(16.dp),
+        .padding(1.dp)
+        .background(
+            brush = Brush.verticalGradient(
+                colors = listOf(
+                    Color.White,          // Blanco arriba
+                    Color(0xFFFEFEFF),    // Azul claro en el centro
+                    Color(0xFFFDFEFF)     // Azul muy claro casi blanco abajo
+                )
+            )
+        ),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally){
-        Column(modifier = Modifier.weight(1.5f),
+        Column(modifier = Modifier.weight(1.8f),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
             ){

@@ -11,11 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.navigation.ContentNavigation
+import com.example.proyectopoli.screens.fragments.content.menu.Menu
 import com.example.proyectopoli.screens.fragments.content.menu.MenuFragment
+
 import kotlinx.coroutines.launch
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,7 +40,7 @@ fun HomeScreen() {
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                MenuFragment(
+                Menu(
                     selectedOption = selectedOption,
                     onOptionSelected = { option ->
                         selectedOption = option
@@ -91,7 +96,11 @@ fun HomeScreen() {
                     .padding(paddingValues),
                 color = MaterialTheme.colorScheme.background // Fondo sin degradado
             ) {
-                ContentNavigation(selectedOption = selectedOption)
+                val context = LocalContext.current
+                val mascotaPreferences = remember { MascotaPreferences(context) }
+
+                ContentNavigation(selectedOption = selectedOption,
+                    mascotaPreferences = mascotaPreferences)
             }
         }
     }

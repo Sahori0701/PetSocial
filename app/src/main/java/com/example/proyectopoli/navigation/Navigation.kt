@@ -1,22 +1,26 @@
 package com.example.proyectopoli.navigation
 
 import androidx.compose.runtime.Composable
+import com.example.proyectopoli.data.MascotaPreferences
+import com.example.proyectopoli.model.MascotaPerfil
 import com.example.proyectopoli.screens.fragments.content.BotonesFragment
 import com.example.proyectopoli.screens.fragments.content.FotosFragment
 import com.example.proyectopoli.screens.fragments.content.InicioFragment
-import com.example.proyectopoli.screens.fragments.content.PerfilFragment
+
 import com.example.proyectopoli.screens.fragments.content.VideosFragment
 import com.example.proyectopoli.screens.fragments.content.WebFragment
-import com.example.proyectopoli.screens.fragments.content.InicioFragment
+import com.example.proyectopoli.screens.fragments.content.PerfilFragment
+
 
 @Composable
-fun ContentNavigation(selectedOption: String) {
+fun ContentNavigation(selectedOption: String,
+                      mascotaPreferences: MascotaPreferences
+) {
     when (selectedOption) {
-        "perfil" -> PerfilFragment()
+        "perfil" -> PerfilFragment(mascotaPreferences = mascotaPreferences)
         "fotos" -> FotosFragment()
         "videos" -> VideosFragment()
         "web" -> WebFragment()
-        "botones" -> BotonesFragment()
-        else -> InicioFragment()
+         else -> InicioFragment()
     }
 }

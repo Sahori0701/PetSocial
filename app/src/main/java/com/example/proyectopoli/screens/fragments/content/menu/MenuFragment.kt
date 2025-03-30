@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.RadioButtonChecked
@@ -31,12 +32,13 @@ fun MenuFragment(
     onOptionSelected: (String) -> Unit
 ) {
     val menuItems = listOf(
-        //MenuItem(id = "inicio", title = "Inicio", icon = Icons.Default.AccountCircle),
+        MenuItem(id = "inicio", title = "Inicio", icon = Icons.Default.Home),
         MenuItem(id = "perfil", title = "Perfil", icon = Icons.Default.AccountCircle),
         MenuItem(id = "fotos", title = "Fotos", icon = Icons.Default.Image),
         MenuItem(id = "videos", title = "Videos", icon = Icons.Default.Videocam),
         MenuItem(id = "web", title = "Web", icon = Icons.Default.Language),
         MenuItem(id = "botones", title = "Botones", icon = Icons.Default.RadioButtonChecked)
+        //MenuItem(id = "inicio", title = "Inicio", icon = Icons.Default.RadioButtonChecked)
     )
 
     Column(

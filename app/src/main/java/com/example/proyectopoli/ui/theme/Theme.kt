@@ -18,15 +18,17 @@ import androidx.core.view.WindowCompat
 
 // 🎨 Definimos una paleta de colores en tonos de azul oscuro
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF0D47A1), // Azul más oscuro
+    primary = Color(0xFF64B5F6), // Azul más oscuro
     secondary = Color(0xFF1976D2), // Azul intermedio
-    tertiary = Color(0xFF64B5F6)  // Azul claro
+    tertiary = Color(0xFF64B5F6),  // Azul claro
+    surface = Color.Transparent
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF1565C0), // Azul fuerte en modo claro
-    secondary = Color(0xFF1E88E5), // Azul intermedio
-    tertiary = Color(0xFF90CAF9)  // Azul claro
+    primary = Color(0xFFE2E5FB), // Azul fuerte en modo claro
+    secondary = Color(0xFF343F4B), // Azul intermedio
+    tertiary = Color(0xFFF5F5F5),
+    surface = Color.Transparent// Azul claro
 )
 
 @Composable
