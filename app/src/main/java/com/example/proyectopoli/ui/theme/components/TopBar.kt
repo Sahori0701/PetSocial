@@ -28,7 +28,7 @@ fun AppBarMain(
 ) {
     TopAppBar(
         title = {
-            Box( modifier = Modifier.padding(all = 12.dp), contentAlignment = Alignment.Center){
+            Box( modifier = Modifier.padding(all = 20.dp), contentAlignment = Alignment.Center){
                 Text(
                 text = title,
                 //style = MaterialTheme.typography.headlineLarge,

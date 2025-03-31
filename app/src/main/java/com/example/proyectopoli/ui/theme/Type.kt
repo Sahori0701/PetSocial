@@ -50,7 +50,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Bold,
         color = Color.White,
-        fontSize = 24.sp,
+        fontSize = 18.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp
     ),

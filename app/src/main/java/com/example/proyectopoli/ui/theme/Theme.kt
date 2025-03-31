@@ -27,7 +27,7 @@ private val DarkColorScheme = darkColorScheme(
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFFE2E5FB), // Azul fuerte en modo claro
     secondary = Color(0xFF343F4B), // Azul intermedio
-    tertiary = Color(0xFFF5F5F5),
+    tertiary = Color(0xFF757575),
     surface = Color.Transparent// Azul claro
 )
 
