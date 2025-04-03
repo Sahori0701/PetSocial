@@ -6,5 +6,6 @@ data class MascotaPerfil(
     val peso: String = "",
     val duenio: String = "",
     val descripcion: String = "",
+    val edad: String = "",
     val fotoUri: String? = null
 )
