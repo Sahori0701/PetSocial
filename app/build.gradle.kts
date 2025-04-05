@@ -70,4 +70,6 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
     implementation("io.coil-kt:coil-compose:2.5.0")// Asegúrate de usar la última versión
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+    implementation(libs.material.icons.core)
+
 }

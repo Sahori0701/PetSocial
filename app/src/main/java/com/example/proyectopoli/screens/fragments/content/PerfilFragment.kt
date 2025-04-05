@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 
+
 fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

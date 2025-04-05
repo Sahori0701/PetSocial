@@ -9,4 +9,9 @@
         su propia red social!
     </string>
     <string name="raster_string">PetSocial</string>
+    <string name="app_video">
+        Crea, comparte y disfruta videos con \n
+        tus petfriends
+    </string>
+    <string name="app_title_video"> Video </string>
 </resources>
