@@ -145,12 +145,12 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
         }
         Spacer(modifier = Modifier.height(15.dp))
         Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(0.4f)
-                .background(Color(0xFFF0F7FF)),
+                .weight(0.4f),
+                //.background(Color(0xFFBBD6FF)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
@@ -217,13 +217,14 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 }
             }
         }
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f),
+                .weight(1f)
+                .background(Color(0xFFF0F7FF)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (isEditing) {
@@ -234,7 +235,7 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 MostrarDescripcion(mascota)
             }
         }
-        Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(5.dp))
         Divider(color = Color.Gray, thickness = 1.dp)
         Spacer(modifier = Modifier.height(15.dp))
         Column(
@@ -420,7 +421,7 @@ fun MostrarDuenio(mascota: MascotaPerfil) {
                 text = mascota.duenio,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
+                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
                 modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
@@ -476,7 +477,7 @@ fun MostrarRaza(mascota: MascotaPerfil) {
                 text = mascota.raza,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
+                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
                 modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
@@ -507,7 +508,7 @@ fun MostrarPeso(mascota: MascotaPerfil) {
                 text = mascota.peso,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
+                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
                 modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
@@ -563,7 +564,7 @@ fun MostrarEdad(mascota: MascotaPerfil) {
                 text = mascota.edad,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.SemiBold,
+                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
                 modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
