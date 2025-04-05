@@ -1,5 +1,7 @@
 package com.example.proyectopoli.navigation
 
+
+
 import androidx.compose.runtime.Composable
 import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
@@ -8,6 +10,7 @@ import com.example.proyectopoli.screens.fragments.content.FotosFragment
 import com.example.proyectopoli.screens.fragments.content.InicioFragment
 import com.example.proyectopoli.screens.fragments.content.VideosFragment
 import com.example.proyectopoli.screens.fragments.content.WebFragment
+
 import com.example.proyectopoli.screens.fragments.content.PerfilFragment
 
 
@@ -19,7 +22,7 @@ fun ContentNavigation(selectedOption: String,
         "perfil" -> PerfilFragment(mascotaPreferences = mascotaPreferences)
         "fotos" -> FotosFragment(mascotaPreferences = mascotaPreferences)
         "videos" -> VideosFragment(mascotaPreferences = mascotaPreferences)
-        "web" -> WebFragment()
+        "web" -> WebFragment(mascotaPreferences = mascotaPreferences)
          else -> InicioFragment()
     }
 }

@@ -150,7 +150,7 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.4f),
-                //.background(Color(0xFFBBD6FF)),
+            //.background(Color(0xFFBBD6FF)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
