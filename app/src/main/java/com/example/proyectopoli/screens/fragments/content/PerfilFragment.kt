@@ -38,6 +38,12 @@ import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
 import com.example.proyectopoli.utils.guardarImagenPermanente
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.SolidColor
+
 
 @Composable
 
@@ -321,7 +327,23 @@ fun EditarDescripcion(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> 
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (descripcion.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Introduce una descripción",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 15.sp //
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -370,7 +392,23 @@ fun EditarPeso(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+                    decorationBox = { innerTextField ->
+                if (peso.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Peso",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 17.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -395,7 +433,23 @@ fun EditarDuenio(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+                    decorationBox = { innerTextField ->
+                if (duenio.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Nombre del dueño",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 17.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -451,7 +505,23 @@ fun EditarRaza(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (raza.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Raza",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 17.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -538,7 +608,23 @@ fun EditarEdad(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (edad.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Edad",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 17.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }
@@ -595,7 +681,23 @@ fun EditarNombre(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            decorationBox = { innerTextField ->
+                if (nombre.isEmpty()) {
+                    // Mostrar el placeholder cuando el texto está vacío
+                    Text(
+                        text = "Nombre",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 17.sp
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                innerTextField()
+            },
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
         )
     }
 }

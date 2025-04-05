@@ -26,7 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
@@ -45,6 +47,7 @@ data class VideoItem(
 )
 
 @Composable
+
 fun VideosFragment(mascotaPreferences: MascotaPreferences) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -161,10 +164,10 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                             .clip(CircleShape)
                     )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(0.5.dp))
                 Text(
                     text = stringResource(R.string.videos),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 17.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
