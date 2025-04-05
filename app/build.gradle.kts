@@ -49,6 +49,7 @@ android {
     }
 }
 
+
 dependencies {
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -61,6 +62,7 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.material.icons.extended)
     implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.navigation.fragment.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -70,6 +72,7 @@ dependencies {
     debugImplementation(libs.ui.test.manifest)
     implementation("io.coil-kt:coil-compose:2.5.0")// Asegúrate de usar la última versión
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
-    implementation(libs.material.icons.core)
+    implementation ("androidx.media3:media3-exoplayer:1.3.1")
+    implementation ("androidx.media3:media3-ui:1.3.1")
 
 }

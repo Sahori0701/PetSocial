@@ -14,4 +14,11 @@
         tus petfriends
     </string>
     <string name="app_title_video"> Video </string>
+    <string name="videos">
+        ¡Crea, comparte y disfruta videos!\n
+        con tus petfriends.
+    </string>
+    <string name="fotos">
+        ¡Explora sus aventuras!
+    </string>
 </resources>
