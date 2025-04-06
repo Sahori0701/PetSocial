@@ -49,7 +49,7 @@ fun DrawerItem(
             contentDescription = item.title,
             tint = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(24.dp))
         Text(
             text = item.title,
             style = MaterialTheme.typography.headlineMedium,

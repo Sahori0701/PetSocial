@@ -51,6 +51,7 @@ fun Menu(
         MenuItem(id = "videos", title = "Videos", icon = Icons.Default.Videocam),
         MenuItem(id = "web", title = "Web", icon = Icons.Default.Language),
 
+
     )
 
     Column(
@@ -116,5 +117,6 @@ fun Menu(
                 }
             }
         }
+        Divider()
     }
 }

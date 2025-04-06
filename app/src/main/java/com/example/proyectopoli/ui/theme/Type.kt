@@ -30,11 +30,12 @@ val Typography = Typography(
     ),
     // Estilo para el cuerpo de texto pequeño
     bodySmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp,
-        letterSpacing = 0.4.sp
+        fontFamily = FontFamily.Serif,
+        color = Color(0xFF343F4B),
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        lineHeight = 40.sp,
+        letterSpacing = 0.2.sp
     ),
     // Estilo para títulos grandes
     headlineLarge = TextStyle(
@@ -50,7 +51,7 @@ val Typography = Typography(
         fontFamily = FontFamily.Serif,
         fontWeight = FontWeight.Bold,
         color = Color.White,
-        fontSize = 24.sp,
+        fontSize = 18.sp,
         lineHeight = 32.sp,
         letterSpacing = 0.5.sp
     ),

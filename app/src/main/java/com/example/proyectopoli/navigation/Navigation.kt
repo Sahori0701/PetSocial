@@ -6,6 +6,7 @@ import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
 
 import com.example.proyectopoli.screens.fragments.content.BotonesFragment
+import com.example.proyectopoli.screens.fragments.content.FotosFragment
 import com.example.proyectopoli.screens.fragments.content.InicioFragment
 
 import com.example.proyectopoli.screens.fragments.content.VideosFragment

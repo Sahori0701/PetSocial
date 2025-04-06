@@ -19,7 +19,8 @@ class MascotaPreferences(private val context: Context) {
         private val KEY_PESO = stringPreferencesKey("peso")
         private val KEY_DUENIO = stringPreferencesKey("duenio")
         private val KEY_DESCRIPCION = stringPreferencesKey("descripcion")
-        private val KEY_FOTO = stringPreferencesKey("foto_uri")
+        private val KEY_FOTO = stringPreferencesKey("foto_path")
+        private val KEY_EDAD = stringPreferencesKey("edad")// Guardamos la ruta absoluta
     }
 
     val mascotaFlow: Flow<MascotaPerfil> = context.dataStore.data.map { preferences ->
@@ -29,7 +30,8 @@ class MascotaPreferences(private val context: Context) {
             peso = preferences[KEY_PESO] ?: "",
             duenio = preferences[KEY_DUENIO] ?: "",
             descripcion = preferences[KEY_DESCRIPCION] ?: "",
-            fotoUri = preferences[KEY_FOTO]
+            fotoUri = preferences[KEY_FOTO],
+            edad = preferences[KEY_EDAD] ?: ""
         )
     }
 
@@ -40,6 +42,7 @@ class MascotaPreferences(private val context: Context) {
             preferences[KEY_PESO] = mascota.peso
             preferences[KEY_DUENIO] = mascota.duenio
             preferences[KEY_DESCRIPCION] = mascota.descripcion
+            preferences[KEY_EDAD] = mascota.edad
             mascota.fotoUri?.let { preferences[KEY_FOTO] = it }
         }
     }
