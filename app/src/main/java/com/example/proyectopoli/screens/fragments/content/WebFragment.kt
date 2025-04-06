@@ -1,58 +1,46 @@
 package com.example.proyectopoli.screens.fragments.content
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
+import android.util.Log
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.*
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import coil.compose.rememberAsyncImagePainter
+import com.example.proyectopoli.R
 import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
-import java.time.format.TextStyle
-import androidx.compose.ui.zIndex
-import com.example.proyectopoli.R
+import android.content.Intent
+import android.net.Uri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SetJavaScriptEnabled")
@@ -65,18 +53,10 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
     var webView: WebView? by remember { mutableStateOf(null) }
     var isLoading by remember { mutableStateOf(false) }
     var expandedMenu by remember { mutableStateOf(false) }
-    var fullscreenMode by remember { mutableStateOf(false) }
-
+    var fullscreenMode by rememberSaveable { mutableStateOf(false) }
     var mascota by remember { mutableStateOf(MascotaPerfil()) }
-    var nuevaUri by remember { mutableStateOf<Uri?>(null) }
+    var showWebView by remember { mutableStateOf(false) }
 
-    val paginasPreferidas = listOf(
-        "https://puppis.com.ar" to "Puppis",
-        "https://royalcanin.com" to "Royal Canin",
-        "https://purina.com" to "Purina",
-        "https://petngo.com.mx" to "Pet n' Go",
-        "https://hillspet.com" to "Hill's Pet"
-    )
 
     LaunchedEffect(Unit) {
         mascotaPreferences.mascotaFlow.collect { mascota = it }
@@ -85,24 +65,22 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
         }
     }
 
-
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp),
+            .fillMaxSize()
+            .padding(6.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         AnimatedVisibility(
-            visible = !fullscreenMode,
+            visible = !fullscreenMode && !showWebView,
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth(),
+            Column( // Columna dentro de AnimatedVisibility
+                modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column(
+                Column( // Columna para "Conecta" y foto
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(0.9f),
@@ -129,7 +107,7 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
                         text = stringResource(R.string.conecta),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp),
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -137,120 +115,39 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
-                Divider(color = Color.Gray, thickness = 1.dp)
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-
-                Column(
+                OutlinedTextField(
+                    value = searchQuery,
+                    onValueChange = { searchQuery = it },
+                    label = { Text("Buscar") },
                     modifier = Modifier
-                        .fillMaxSize()
-                        .weight(0.2f)
-                        .background(Color(0xFFF0F7FF)),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-
-
-
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        OutlinedTextField(
-                            value = searchQuery,
-                            onValueChange = { searchQuery = it },
-                            placeholder = {
-                                Text(
-                                    "https://sitiosweb.com",
-                                    fontSize = 14.sp
-                                )
-                            },
-                            singleLine = true,
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(54.dp),
-                            shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color(0xFF3B5BFE),
-                                unfocusedBorderColor = Color.Gray,
-                                cursorColor = Color(0xFF3B5BFE)
-                            ),
-                            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 14.sp)
-                        )
-
-                        Button(
+                        .fillMaxWidth(0.8f)
+                        .offset(y = (-50).dp),
+                    singleLine = true,
+                    trailingIcon = {
+                        IconButton(
                             onClick = {
-                                if (searchQuery.isNotEmpty()) {
-                                    val url = if (searchQuery.startsWith("http://") || searchQuery.startsWith("https://")) {
-                                        searchQuery
-                                    } else {
-                                        "https://$searchQuery"
-                                    }
+                                if (searchQuery.isNotBlank()) {
+                                    val query = Uri.encode(searchQuery)
+                                    val url = "https://www.google.com/search?q=$query"
                                     currentUrl = url
-                                    webView?.loadUrl(url)
-                                    fullscreenMode = true
+                                    showWebView = true
                                 }
                             },
-                            shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF3B5BFE)
-                            ),
-                            modifier = Modifier.height(54.dp)
-                        ) {
-                            Text(
-                                "Buscar",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
-                                color = Color.White
+
+                            ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.magnifying_glass),
+                                contentDescription = "Buscar",
+                                tint = Color(0xFF3B5BFE),
+                                modifier = Modifier.size(50.dp)
+
                             )
                         }
-
-                        Box {
-                            IconButton(onClick = { expandedMenu = true }) {
-                                Icon(
-                                    Icons.Default.KeyboardArrowDown,
-                                    contentDescription = "Mostrar páginas preferidas",
-                                    tint = Color(0xFF3B5BFE)
-                                )
-                            }
-
-                            DropdownMenu(
-                                expanded = expandedMenu,
-                                onDismissRequest = { expandedMenu = false },
-                                modifier = Modifier
-                                    .width(250.dp)
-                                    .background(Color.White)
-                            ) {
-                                paginasPreferidas.forEach { (url, nombre) ->
-                                    DropdownMenuItem(
-                                        text = { Text(nombre) },
-                                        onClick = {
-                                            currentUrl = url
-                                            searchQuery = url
-                                            webView?.loadUrl(url)
-                                            expandedMenu = false
-                                            fullscreenMode = true
-                                        }
-                                    )
-                                }
-                            }
-                        }
                     }
-
-
-
-
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-                Divider(color = Color.Gray, thickness = 1.dp)
-                Spacer(modifier = Modifier.height(10.dp))
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .weight(1.9f),
-                    horizontalAlignment = Alignment.CenterHorizontally
                 )
+
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
@@ -272,7 +169,7 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                                 modifier = Modifier
                                     .height(87.dp)
                                     .width(100.dp)
-                                    .offset(y = 220.dp)
+                                    .offset(y = (-30).dp)
                             )
                             Text(
                                 text = stringResource(R.string.raster_string),
@@ -280,7 +177,7 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .offset(y = 220.dp)
+                                    .offset(y = (-30).dp)
                             )
                         }
                         Image(
@@ -290,89 +187,45 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                                 .height(400.dp)
                                 .fillMaxWidth()
                                 .align(Alignment.Center)
-                                .offset(y = 290.dp),
+                                .offset(y = (1).dp),
                             contentScale = androidx.compose.ui.layout.ContentScale.Crop
                         )
                     }
                 }
-
-
             }
         }
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
+        // WebView integrado
+        AnimatedVisibility(
+            visible = showWebView,
+            enter = fadeIn(),
+            exit = fadeOut()
         ) {
-            if (fullscreenMode) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 AndroidView(
-                    factory = { ctx ->
-                        WebView(ctx).apply {
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                            webViewClient = object : WebViewClient() {
-                                override fun shouldOverrideUrlLoading(
-                                    view: WebView?,
-                                    request: WebResourceRequest?
-                                ): Boolean {
-                                    request?.url?.toString()?.let {
-                                        currentUrl = it
-                                    }
-                                    return false
-                                }
-
-                                override fun onPageStarted(
-                                    view: WebView?,
-                                    url: String?,
-                                    favicon: Bitmap?
-                                ) {
-                                    super.onPageStarted(view, url, favicon)
-                                    isLoading = true
-                                }
-
-                                override fun onPageFinished(view: WebView?, url: String?) {
-                                    super.onPageFinished(view, url)
-                                    isLoading = false
-                                    url?.let { currentUrl = it }
-                                }
-                            }
-                            webChromeClient = WebChromeClient()
+                    factory = {
+                        WebView(it).apply {
                             settings.javaScriptEnabled = true
-                            settings.domStorageEnabled = true
-                            settings.loadWithOverviewMode = true
-                            settings.useWideViewPort = true
-                            settings.setSupportZoom(true)
-                            if (currentUrl.isNotEmpty()) loadUrl(currentUrl)
+                            webViewClient = WebViewClient()
+                            loadUrl(currentUrl)
                             webView = this
                         }
                     },
-                    modifier = Modifier.fillMaxSize()
+                    update = {
+                        it.loadUrl(currentUrl)
+                        webView = it
+                    }
                 )
-
-                if (isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color(0xFF3F51B5)
-                    )
+                // Botón para regresar
+                FloatingActionButton(
+                    onClick = { showWebView = false },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp)
+                ) {
+                    Icon(Icons.Filled.KeyboardArrowDown, "Regresar")
                 }
-            } else {
-                Spacer(modifier = Modifier.fillMaxSize())
             }
         }
-
-        if (!isLoading && currentUrl == "https://puppis.com.ar" && !fullscreenMode) {
-            Image(
-                painter = painterResource(id = R.drawable.raster_logo),
-                contentDescription = "Collage de mascotas",
-                contentScale = ContentScale.FillWidth,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-            )
-        }
     }
-
 }

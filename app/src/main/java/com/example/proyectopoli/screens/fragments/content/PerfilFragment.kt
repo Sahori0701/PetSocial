@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.isEmpty
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -148,7 +149,9 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Card(
-                    modifier = Modifier.weight(1f).padding(2.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -164,7 +167,9 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                     }
                 }
                 Card(
-                    modifier = Modifier.weight(1f).padding(2.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -186,7 +191,9 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Card(
-                    modifier = Modifier.weight(1f).padding(2.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -202,7 +209,9 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                     }
                 }
                 Card(
-                    modifier = Modifier.weight(1f).padding(2.dp),
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(2.dp),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
                     shape = RoundedCornerShape(8.dp),
                     elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
@@ -315,7 +324,26 @@ fun EditarDescripcion(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> 
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+                    if (descripcion.isEmpty()) {
+                        Text(
+                            text = "Ingresa una descripción de su petfriend",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 18.sp
+                            ),
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -372,7 +400,26 @@ fun EditarPeso(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+                    if (peso.isEmpty()) {
+                        Text(
+                            text = "Peso", // Placeholder
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 18.sp
+                            ),
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -406,7 +453,26 @@ fun EditarDuenio(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(6.dp)
+            ) {
+                if (duenio.isEmpty()) {
+                    Text(
+                        text = "Nombre del sueño", // Placeholder
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            textAlign = TextAlign.Center,
+                            color = Color.Gray,
+                            fontSize = 18.sp
+                        ),
+                    )
+                }
+                innerTextField()
+            }
+        }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -470,7 +536,26 @@ fun EditarRaza(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+                    if (raza.isEmpty()) {
+                        Text(
+                            text = "Raza",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 18.sp
+                            ),
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -564,7 +649,26 @@ fun EditarEdad(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)), // Resaltar el campo
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+                    if (edad.isEmpty()) {
+                        Text(
+                            text = "Edad", // Placeholder text
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 18.sp
+                            ),
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -628,7 +732,26 @@ fun EditarNombre(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color(0xFFF5F5F5))
-                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)), // Resaltar el campo
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(6.dp)
+                ) {
+                    if (nombre.isEmpty()) {
+                        Text(
+                            text = " Ingrese el nombre de su mascota",
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textAlign = TextAlign.Center,
+                                color = Color.Gray,
+                                fontSize = 18.sp
+                            ),
+                        )
+                    }
+                    innerTextField()
+                }
+            }
         )
         Row(
             modifier = Modifier.fillMaxWidth(),

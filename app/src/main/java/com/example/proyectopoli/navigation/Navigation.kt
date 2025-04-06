@@ -21,8 +21,8 @@ fun ContentNavigation(selectedOption: String,
     when (selectedOption) {
         "perfil" -> PerfilFragment(mascotaPreferences = mascotaPreferences)
         "fotos" -> PhotosScreen()
-        "videos" -> VideosFragment()
-        "web" -> WebFragment()
+        "videos" -> VideosFragment(mascotaPreferences = mascotaPreferences)
+        "web" -> WebFragment(mascotaPreferences = mascotaPreferences)
          else -> InicioFragment()
     }
 }
