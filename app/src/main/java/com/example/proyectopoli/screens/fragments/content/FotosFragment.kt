@@ -1,8 +1,8 @@
 package com.example.proyectopoli.screens.fragments.content
 
-
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -15,6 +15,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,12 +36,15 @@ import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
 import kotlinx.coroutines.launch
 import java.io.File
+import androidx.core.content.FileProvider
+import com.google.accompanist.permissions.*
 
 data class FotoItem(
     val uri: Uri,
     val descripcion: String
 )
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun FotosFragment(mascotaPreferences: MascotaPreferences) {
     val context = LocalContext.current
@@ -57,14 +62,45 @@ fun FotosFragment(mascotaPreferences: MascotaPreferences) {
     var selectedFotoIndex by remember { mutableStateOf<Int?>(null) }
     var showAddDialog by remember { mutableStateOf(false) }
     var descripcionTemporal by remember { mutableStateOf("") }
+    var showFotoSourceDialog by remember { mutableStateOf(false) } // Nuevo estado para el diálogo de origen de la foto
 
-    val fotoPicker =
+    // Permisos de cámara
+    val cameraPermissionState =
+        rememberPermissionState(permission = android.Manifest.permission.CAMERA)
+
+    LaunchedEffect(Unit) {
+        if (!cameraPermissionState.status.isGranted) {
+            cameraPermissionState.launchPermissionRequest()
+        }
+    }
+
+    // Seleccionar imagen de la galería
+    val galleryPicker =
         rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
             uri?.let {
                 nuevaUri = it
                 showAddDialog = true
             }
         }
+
+    // Tomar foto con la cámara
+    val photoFile = File(
+        context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+        "foto_mascota_${System.currentTimeMillis()}.jpg"
+    )
+    val photoUri = FileProvider.getUriForFile(
+        context,
+        "${context.packageName}.provider",
+        photoFile
+    )
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            nuevaUri = photoUri
+            showAddDialog = true
+        }
+    }
 
     if (showAddDialog && nuevaUri != null) {
         AlertDialog(
@@ -199,7 +235,7 @@ fun FotosFragment(mascotaPreferences: MascotaPreferences) {
                         )
                     }
                     item {
-                        AddFotoButton { fotoPicker.launch("image/*") }
+                        AddFotoButton { showFotoSourceDialog = true } // Mostrar diálogo al pulsar el botón "+"
                     }
                 }
             }
@@ -229,6 +265,30 @@ fun FotosFragment(mascotaPreferences: MascotaPreferences) {
                 )
             }
         }
+    }
+
+    // Diálogo para seleccionar el origen de la foto (galería o cámara)
+    if (showFotoSourceDialog) {
+        AlertDialog(
+            onDismissRequest = { showFotoSourceDialog = false },
+            title = { Text("Seleccionar origen de la foto") },
+            confirmButton = {
+                Column(modifier = Modifier.padding(8.dp)) {
+                    Button(onClick = {
+                        galleryPicker.launch("image/*")
+                        showFotoSourceDialog = false
+                    }) {
+                        Text("Galería")
+                    }
+                    Button(onClick = {
+                        cameraLauncher.launch(photoUri)
+                        showFotoSourceDialog = false
+                    }) {
+                        Text("Cámara")
+                    }
+                }
+            }
+        )
     }
 }
 
