@@ -337,7 +337,7 @@ fun EditarDescripcion(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> 
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 textAlign = TextAlign.Center,
                                 color = Color.Gray,
-                                fontSize = 18.sp
+                                fontSize = 20.sp
                             ),
                         )
                     }
