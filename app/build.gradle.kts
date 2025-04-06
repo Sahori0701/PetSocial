@@ -68,6 +68,21 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
-    implementation("io.coil-kt:coil-compose:2.5.0")// Asegúrate de usar la última versión
+    implementation("io.coil-kt:coil-compose:2.5.0")
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
+
+    // Jetpack Compose básico
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.material:material:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling-preview:1.6.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+
+    // Coil para imágenes
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
+    // Lazy vertical grid (parte del foundation)
+    implementation("androidx.compose.foundation:foundation:1.6.0")
+
+
+    implementation("com.google.accompanist:accompanist-permissions:0.30.1")
 }
