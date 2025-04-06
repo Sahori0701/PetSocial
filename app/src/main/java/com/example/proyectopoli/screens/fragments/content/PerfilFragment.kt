@@ -4,6 +4,9 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -11,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
@@ -22,6 +26,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -29,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
@@ -40,7 +44,6 @@ import com.example.proyectopoli.utils.guardarImagenPermanente
 import kotlinx.coroutines.launch
 
 @Composable
-
 fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -49,21 +52,16 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
     var isEditing by remember { mutableStateOf(false) }
     var nuevaUri by remember { mutableStateOf<Uri?>(null) }
 
-    // Cargar datos desde DataStore
     LaunchedEffect(Unit) {
         mascotaPreferences.mascotaFlow.collect { mascota = it }
     }
 
-    // Lanzador para seleccionar una imagen de la galería
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         uri?.let {
             nuevaUri = it
-            val rutaImagen =
-                guardarImagenPermanente(context, it) // Guarda la imagen en almacenamiento interno
+            val rutaImagen = guardarImagenPermanente(context, it)
             scope.launch {
-                mascotaPreferences.guardarMascota(
-                    mascota.copy(fotoUri = rutaImagen) // Guardar la nueva foto
-                )
+                mascotaPreferences.guardarMascota(mascota.copy(fotoUri = rutaImagen))
                 Toast.makeText(context, "Foto actualizada", Toast.LENGTH_SHORT).show()
             }
         }
@@ -97,7 +95,6 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
             } else {
                 MostrarNombre(mascota)
             }
-
         }
         Spacer(modifier = Modifier.height(10.dp))
         Box(
@@ -116,21 +113,16 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(200.dp)
-                    .border(BorderStroke(2.dp, Color.White), CircleShape) // 🟢 Borde gris
                     .clip(CircleShape)
+                    .shadow(8.dp, CircleShape)
             )
-
-            // 📷 Botón de cámara superpuesto en la esquina inferior derecha
             Box(
                 modifier = Modifier
-                    .size(40.dp) // 📌 Tamaño del botón
-                    .align(Alignment.BottomEnd) // 📌 Se coloca en la parte inferior derecha
-                    .offset(
-                        x = (-100).dp,
-                        y = -10.dp
-                    ) // 📌 Ajuste fino para que toque el borde de la imagen
-                    .background(Color.White, CircleShape) // 🟢 Fondo gris claro
-                    .border(BorderStroke(1.dp, Color.White), CircleShape) // 🟢 Borde gris oscuro
+                    .size(40.dp)
+                    .align(Alignment.BottomEnd)
+                    .offset(x = (-100).dp, y = -10.dp)
+                    .background(Color.White, CircleShape)
+                    .border(BorderStroke(1.dp, Color.White), CircleShape)
                     .clickable { launcher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
@@ -138,10 +130,9 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                     painter = painterResource(id = R.drawable.camera),
                     contentDescription = "Editar Foto",
                     tint = Color(0xFF3B5BFE),
-                    modifier = Modifier.size(20.dp) // 📌 Tamaño del icono ajustado para no sobresalir
+                    modifier = Modifier.size(20.dp)
                 )
             }
-
         }
         Spacer(modifier = Modifier.height(15.dp))
         Divider(color = Color.Gray, thickness = 1.dp)
@@ -150,37 +141,42 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
             modifier = Modifier
                 .fillMaxSize()
                 .weight(0.4f),
-            //.background(Color(0xFFBBD6FF)),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Row(
                 modifier = Modifier.weight(0.5f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Card(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
-                    if (isEditing) {
-                        EditarEdad(mascota) { mascotaActualizada ->
-                            mascota = mascotaActualizada
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (isEditing) {
+                            EditarEdad(mascota) { mascotaActualizada ->
+                                mascota = mascotaActualizada
+                            }
+                        } else {
+                            MostrarEdad(mascota)
                         }
-                    } else {
-                        MostrarEdad(mascota)
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Card(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
-                    if (isEditing) {
-                        EditarPeso(mascota) { mascotaActualizada ->
-                            mascota = mascotaActualizada
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (isEditing) {
+                            EditarPeso(mascota) { mascotaActualizada ->
+                                mascota = mascotaActualizada
+                            }
+                        } else {
+                            MostrarPeso(mascota)
                         }
-                    } else {
-                        MostrarPeso(mascota)
                     }
                 }
             }
@@ -189,30 +185,36 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                 modifier = Modifier.weight(0.5f),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Card(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
-                    if (isEditing) {
-                        EditarRaza(mascota) { mascotaActualizada ->
-                            mascota = mascotaActualizada
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (isEditing) {
+                            EditarRaza(mascota) { mascotaActualizada ->
+                                mascota = mascotaActualizada
+                            }
+                        } else {
+                            MostrarRaza(mascota)
                         }
-                    } else {
-                        MostrarRaza(mascota)
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .weight(1f),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                Card(
+                    modifier = Modifier.weight(1f).padding(2.dp),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
+                    shape = RoundedCornerShape(8.dp),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
                 ) {
-                    if (isEditing) {
-                        EditarDuenio(mascota) { mascotaActualizada ->
-                            mascota = mascotaActualizada
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (isEditing) {
+                            EditarDuenio(mascota) { mascotaActualizada ->
+                                mascota = mascotaActualizada
+                            }
+                        } else {
+                            MostrarDuenio(mascota)
                         }
-                    } else {
-                        MostrarDuenio(mascota)
                     }
                 }
             }
@@ -220,12 +222,14 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
         Spacer(modifier = Modifier.height(5.dp))
         Divider(color = Color.Gray, thickness = 1.dp)
         Spacer(modifier = Modifier.height(5.dp))
-        Column(
+        Card(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .weight(1f)
-                .background(Color(0xFFF0F7FF)),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(4.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F7FF)),
+            shape = RoundedCornerShape(8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
             if (isEditing) {
                 EditarDescripcion(mascota) { mascotaActualizada ->
@@ -263,7 +267,7 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                     isEditing = !isEditing
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent, // Fondo transparente para aplicar el degradado
+                    containerColor = Color.Transparent,
                     contentColor = Color.White
                 ),
                 shape = MaterialTheme.shapes.medium,
@@ -272,17 +276,11 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
                     .background(
                         brush = if (isEditing) {
                             Brush.linearGradient(
-                                colors = listOf(
-                                    Color(0xFF1A237E),
-                                    Color(0xFF536DFE)
-                                ) // Degradado azul oscuro a claro
+                                colors = listOf(Color(0xFF1A237E), Color(0xFF536DFE))
                             )
                         } else {
                             Brush.linearGradient(
-                                colors = listOf(
-                                    Color(0xFF1A237E),
-                                    Color(0xFF536DFE)
-                                ) // Azul estándar para editar
+                                colors = listOf(Color(0xFF1A237E), Color(0xFF536DFE))
                             )
                         },
                         shape = MaterialTheme.shapes.medium
@@ -299,18 +297,12 @@ fun PerfilFragment(mascotaPreferences: MascotaPreferences) {
     }
 }
 
-
 @Composable
 fun EditarDescripcion(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var descripcion by remember { mutableStateOf(mascota.descripcion) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = descripcion,
             onValueChange = {
@@ -320,8 +312,22 @@ fun EditarDescripcion(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> 
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
@@ -335,15 +341,14 @@ fun MostrarDescripcion(mascota: MascotaPerfil) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            horizontalArrangement = Arrangement.Center
         ) {
-
             Text(
                 text = mascota.descripcion,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center
                 ),
-                modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
@@ -352,14 +357,9 @@ fun MostrarDescripcion(mascota: MascotaPerfil) {
 @Composable
 fun EditarPeso(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var peso by remember { mutableStateOf(mascota.peso) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = peso,
             onValueChange = {
@@ -369,22 +369,31 @@ fun EditarPeso(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
 @Composable
 fun EditarDuenio(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var duenio by remember { mutableStateOf(mascota.duenio) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = duenio,
             onValueChange = {
@@ -394,8 +403,22 @@ fun EditarDuenio(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
@@ -409,11 +432,11 @@ fun MostrarDuenio(mascota: MascotaPerfil) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Person, // 📌 Ícono de cumpleaños como representación de la edad
-                contentDescription = "Edad de la Mascota",
+                imageVector = Icons.Default.Person,
+                contentDescription = "Dueño de la Mascota",
                 tint = Color(0xFF3B5BFE),
                 modifier = Modifier.size(30.dp)
             )
@@ -421,10 +444,9 @@ fun MostrarDuenio(mascota: MascotaPerfil) {
                 text = mascota.duenio,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
-                modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
@@ -433,14 +455,9 @@ fun MostrarDuenio(mascota: MascotaPerfil) {
 @Composable
 fun EditarRaza(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var raza by remember { mutableStateOf(mascota.raza) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = raza,
             onValueChange = {
@@ -450,8 +467,22 @@ fun EditarRaza(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
@@ -465,11 +496,11 @@ fun MostrarRaza(mascota: MascotaPerfil) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Pets, // 📌 Ícono de cumpleaños como representación de la edad
-                contentDescription = "Edad de la Mascota",
+                imageVector = Icons.Default.Pets,
+                contentDescription = "Raza de la Mascota",
                 tint = Color(0xFF3B5BFE),
                 modifier = Modifier.size(30.dp)
             )
@@ -477,10 +508,9 @@ fun MostrarRaza(mascota: MascotaPerfil) {
                 text = mascota.raza,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
-                modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
@@ -496,11 +526,11 @@ fun MostrarPeso(mascota: MascotaPerfil) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.Default.HealthAndSafety, // 📌 Ícono de cumpleaños como representación de la edad
-                contentDescription = "Edad de la Mascota",
+                imageVector = Icons.Default.HealthAndSafety,
+                contentDescription = "Peso de la Mascota",
                 tint = Color(0xFF3B5BFE),
                 modifier = Modifier.size(30.dp)
             )
@@ -508,10 +538,9 @@ fun MostrarPeso(mascota: MascotaPerfil) {
                 text = mascota.peso,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
-                modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
@@ -520,14 +549,9 @@ fun MostrarPeso(mascota: MascotaPerfil) {
 @Composable
 fun EditarEdad(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var edad by remember { mutableStateOf(mascota.edad) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = edad,
             onValueChange = {
@@ -537,8 +561,22 @@ fun EditarEdad(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
@@ -552,10 +590,10 @@ fun MostrarEdad(mascota: MascotaPerfil) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+            horizontalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = Icons.Default.Cake, // 📌 Ícono de cumpleaños como representación de la edad
+                imageVector = Icons.Default.Cake,
                 contentDescription = "Edad de la Mascota",
                 tint = Color(0xFF3B5BFE),
                 modifier = Modifier.size(30.dp)
@@ -564,27 +602,20 @@ fun MostrarEdad(mascota: MascotaPerfil) {
                 text = mascota.edad,
                 style = MaterialTheme.typography.bodyMedium.copy(
                     textAlign = TextAlign.Center,
-                    //fontWeight = FontWeight.SemiBold,
                     fontSize = 22.sp,
                 ),
-                modifier = Modifier.padding(start = 8.dp) // Agrega un poco de espacio entre la imagen y el texto
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }
 }
 
-
 @Composable
 fun EditarNombre(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit) {
     var nombre by remember { mutableStateOf(mascota.nombre) }
+    var isEditing by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(Color(0xFFF5F5F5))
-
-    ) {
+    Column {
         BasicTextField(
             value = nombre,
             onValueChange = {
@@ -594,8 +625,22 @@ fun EditarNombre(mascota: MascotaPerfil, onValueChange: (MascotaPerfil) -> Unit)
             textStyle = MaterialTheme.typography.bodyMedium.copy(
                 textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color(0xFFF5F5F5))
+                .border(2.dp, Color.LightGray, RoundedCornerShape(8.dp)) // Resaltar el campo
         )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            TextButton(onClick = { isEditing = false }) {
+                Text("Cancelar")
+            }
+            TextButton(onClick = { isEditing = false }) {
+                Text("Guardar")
+            }
+        }
     }
 }
 
@@ -605,9 +650,6 @@ fun MostrarNombre(mascota: MascotaPerfil) {
         text = mascota.nombre,
         style = MaterialTheme.typography.headlineLarge,
         textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     )
 }
-
-

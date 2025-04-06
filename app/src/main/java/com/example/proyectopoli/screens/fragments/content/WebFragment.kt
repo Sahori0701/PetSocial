@@ -1,9 +1,16 @@
 package com.example.proyectopoli.screens.fragments.content
 
 import android.graphics.Bitmap
+import android.net.Uri
 import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -12,9 +19,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -22,260 +28,309 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.rememberAsyncImagePainter
 import com.example.proyectopoli.R
 import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
-import kotlinx.coroutines.launch
+import java.time.format.TextStyle
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WebFragment(mascotaPreferences: MascotaPreferences) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-
-    var searchText by remember { mutableStateOf("") }
-    var currentUrl by remember { mutableStateOf("https://www.puppis.com.ar") }
-    var mascota by remember { mutableStateOf(MascotaPerfil()) }
-    var isLoading by remember { mutableStateOf(false) }
-    var canGoBack by remember { mutableStateOf(false) }
-    var canGoForward by remember { mutableStateOf(false) }
-
+    var mascotaUri by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }
+    var currentUrl by remember { mutableStateOf("") }
     var webView: WebView? by remember { mutableStateOf(null) }
+    var isLoading by remember { mutableStateOf(false) }
+    var expandedMenu by remember { mutableStateOf(false) }
+    var fullscreenMode by remember { mutableStateOf(false) }
 
-    // Cargar datos desde DataStore
+    var mascota by remember { mutableStateOf(MascotaPerfil()) }
+    var nuevaUri by remember { mutableStateOf<Uri?>(null) }
+
+    val paginasPreferidas = listOf(
+        "https://puppis.com.ar" to "Puppis",
+        "https://royalcanin.com" to "Royal Canin",
+        "https://purina.com" to "Purina",
+        "https://petngo.com.mx" to "Pet n' Go",
+        "https://hillspet.com" to "Hill's Pet"
+    )
+
     LaunchedEffect(Unit) {
         mascotaPreferences.mascotaFlow.collect { mascota = it }
+        mascotaPreferences.mascotaFlow.collect {
+            mascotaUri = it.fotoUri?.toString() ?: ""
+        }
     }
+
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color.White,
-                        Color(0xFFFEFEFF),
-                        Color(0xFFFDFEFF)
-                    )
-                )
-            )
+            .fillMaxWidth()
             .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.2f),
-            horizontalAlignment = Alignment.CenterHorizontally
+        AnimatedVisibility(
+            visible = !fullscreenMode,
+            enter = fadeIn(),
+            exit = fadeOut()
         ) {
-            Text(
-                text = "Conecta",
-                style = MaterialTheme.typography.headlineLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Box(
-                contentAlignment = Alignment.Center
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.raster_logo),
-                    contentDescription = "Logo PetSocial",
+                Column(
                     modifier = Modifier
-                        .size(60.dp)
-                        .border(width = 2.dp, color = Color.White, shape = CircleShape)
-                        .clip(CircleShape)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Text(
-                text = "Descubre, explora y disfruta espacios pensados especialmente para ti",
-                style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Buscador
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            OutlinedTextField(
-                value = searchText,
-                onValueChange = { searchText = it },
-                placeholder = { Text("https://ejemplo.com") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Buscar") },
-                modifier = Modifier
-                    .weight(1f)
-                    .clip(RoundedCornerShape(8.dp)),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF3B5BFE),
-                    unfocusedBorderColor = Color.LightGray
-                ),
-                singleLine = true
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
-
-            Button(
-                onClick = {
-                    var url = searchText
-                    if (!url.startsWith("http://") && !url.startsWith("https://")) {
-                        url = "https://$url"
+                        .fillMaxWidth()
+                        .weight(0.9f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Conecta",
+                        style = MaterialTheme.typography.headlineLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Box(contentAlignment = Alignment.Center) {
+                        Image(
+                            painter = rememberAsyncImagePainter(mascota.fotoUri),
+                            contentDescription = "Foto de Mascota",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .border(BorderStroke(2.dp, Color.White), CircleShape)
+                                .clip(CircleShape)
+                        )
                     }
-                    currentUrl = url
-                    webView?.loadUrl(url)
-                },
-                modifier = Modifier.height(56.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF3B5BFE)
-                )
-            ) {
-                Text("Buscar")
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = stringResource(R.string.conecta),
+                        style = MaterialTheme.typography.bodyMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 2.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(color = Color.Gray, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(10.dp))
+
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(0.2f)
+                        .background(Color(0xFFF0F7FF)),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+
+
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        OutlinedTextField(
+                            value = searchQuery,
+                            onValueChange = { searchQuery = it },
+                            placeholder = {
+                                Text(
+                                    "https://sitiosweb.com",
+                                    fontSize = 14.sp
+                                )
+                            },
+                            singleLine = true,
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(54.dp),
+                            shape = RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = Color(0xFF3B5BFE),
+                                unfocusedBorderColor = Color.Gray,
+                                cursorColor = Color(0xFF3B5BFE)
+                            ),
+                            textStyle = androidx.compose.ui.text.TextStyle(fontSize = 14.sp)
+                        )
+
+                        Button(
+                            onClick = {
+                                if (searchQuery.isNotEmpty()) {
+                                    val url = if (searchQuery.startsWith("http://") || searchQuery.startsWith("https://")) {
+                                        searchQuery
+                                    } else {
+                                        "https://$searchQuery"
+                                    }
+                                    currentUrl = url
+                                    webView?.loadUrl(url)
+                                    fullscreenMode = true
+                                }
+                            },
+                            shape = RoundedCornerShape(topEnd = 8.dp, bottomEnd = 8.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF3B5BFE)
+                            ),
+                            modifier = Modifier.height(54.dp)
+                        ) {
+                            Text(
+                                "Buscar",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                color = Color.White
+                            )
+                        }
+
+                        Box {
+                            IconButton(onClick = { expandedMenu = true }) {
+                                Icon(
+                                    Icons.Default.KeyboardArrowDown,
+                                    contentDescription = "Mostrar páginas preferidas",
+                                    tint = Color(0xFF3B5BFE)
+                                )
+                            }
+
+                            DropdownMenu(
+                                expanded = expandedMenu,
+                                onDismissRequest = { expandedMenu = false },
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .background(Color.White)
+                            ) {
+                                paginasPreferidas.forEach { (url, nombre) ->
+                                    DropdownMenuItem(
+                                        text = { Text(nombre) },
+                                        onClick = {
+                                            currentUrl = url
+                                            searchQuery = url
+                                            webView?.loadUrl(url)
+                                            expandedMenu = false
+                                            fullscreenMode = true
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
+
+
+
+
+                }
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(color = Color.Gray, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(10.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1.9f),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.raster_logo),
+                        contentDescription = "Logo",
+                        modifier = Modifier
+                            .height(87.dp)
+                            .width(100.dp)
+                    )
+                    Text(
+                        text = stringResource(R.string.raster_string),
+                        style = MaterialTheme.typography.headlineLarge,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
+
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Navegación
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            IconButton(
-                onClick = {
-                    if (canGoBack) webView?.goBack()
-                },
-                enabled = canGoBack
-            ) {
-                Icon(
-                    Icons.Default.ArrowBack,
-                    contentDescription = "Atrás",
-                    tint = if (canGoBack) Color(0xFF3B5BFE) else Color.Gray
-                )
-            }
-
-            IconButton(
-                onClick = { webView?.reload() }
-            ) {
-                Icon(
-                    Icons.Default.Refresh,
-                    contentDescription = "Recargar",
-                    tint = Color(0xFF3B5BFE)
-                )
-            }
-
-            IconButton(
-                onClick = {
-                    if (canGoForward) webView?.goForward()
-                },
-                enabled = canGoForward
-            ) {
-                Icon(
-                    Icons.Default.ArrowForward,
-                    contentDescription = "Adelante",
-                    tint = if (canGoForward) Color(0xFF3B5BFE) else Color.Gray
-                )
-            }
-        }
-
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Contenido Web
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)
         ) {
-            AndroidView(
-                factory = { ctx ->
-                    WebView(ctx).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        webViewClient = object : WebViewClient() {
-                            override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                                super.onPageStarted(view, url, favicon)
-                                isLoading = true
-                                url?.let { currentUrl = it }
-                            }
+            if (fullscreenMode) {
+                AndroidView(
+                    factory = { ctx ->
+                        WebView(ctx).apply {
+                            layoutParams = ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                            webViewClient = object : WebViewClient() {
+                                override fun shouldOverrideUrlLoading(
+                                    view: WebView?,
+                                    request: WebResourceRequest?
+                                ): Boolean {
+                                    request?.url?.toString()?.let {
+                                        currentUrl = it
+                                    }
+                                    return false
+                                }
 
-                            override fun onPageFinished(view: WebView?, url: String?) {
-                                super.onPageFinished(view, url)
-                                isLoading = false
-                                canGoBack = view?.canGoBack() ?: false
-                                canGoForward = view?.canGoForward() ?: false
-                                url?.let {
-                                    currentUrl = it
-                                    searchText = it
+                                override fun onPageStarted(
+                                    view: WebView?,
+                                    url: String?,
+                                    favicon: Bitmap?
+                                ) {
+                                    super.onPageStarted(view, url, favicon)
+                                    isLoading = true
+                                }
+
+                                override fun onPageFinished(view: WebView?, url: String?) {
+                                    super.onPageFinished(view, url)
+                                    isLoading = false
+                                    url?.let { currentUrl = it }
                                 }
                             }
+                            webChromeClient = WebChromeClient()
+                            settings.javaScriptEnabled = true
+                            settings.domStorageEnabled = true
+                            settings.loadWithOverviewMode = true
+                            settings.useWideViewPort = true
+                            settings.setSupportZoom(true)
+                            if (currentUrl.isNotEmpty()) loadUrl(currentUrl)
+                            webView = this
                         }
-                        settings.javaScriptEnabled = true
-                        loadUrl(currentUrl)
-                    }.also { webView = it }
-                },
-                update = { view ->
-                    webView = view
-                }
-            )
-
-            if (isLoading) {
-                Box(
-                    contentAlignment = Alignment.Center,
+                    },
                     modifier = Modifier.fillMaxSize()
-                ) {
-                    CircularProgressIndicator(color = Color(0xFF3B5BFE))
+                )
+
+                if (isLoading) {
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color(0xFF3F51B5)
+                    )
                 }
+            } else {
+                Spacer(modifier = Modifier.fillMaxSize())
             }
         }
 
-        Spacer(modifier = Modifier.height(10.dp))
-        Divider(color = Color.Gray, thickness = 1.dp)
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Footer
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.15f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        if (!isLoading && currentUrl == "https://puppis.com.ar" && !fullscreenMode) {
             Image(
                 painter = painterResource(id = R.drawable.raster_logo),
-                contentDescription = "Logo",
+                contentDescription = "Collage de mascotas",
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
-                    .height(50.dp)
-                    .width(60.dp)
-            )
-            Text(
-                text = stringResource(R.string.raster_string),
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                    .fillMaxWidth()
+                    .height(120.dp)
             )
         }
     }
+
 }
