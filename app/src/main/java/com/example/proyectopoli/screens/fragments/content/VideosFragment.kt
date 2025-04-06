@@ -8,9 +8,12 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.OptIn
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -32,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import coil.compose.rememberAsyncImagePainter
@@ -147,13 +151,10 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                     text = "Videos",
                     style = MaterialTheme.typography.headlineLarge,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(10.dp))
-                Box(
-                    contentAlignment = Alignment.Center
-                ) {
+                Box(contentAlignment = Alignment.Center) {
                     Image(
                         painter = rememberAsyncImagePainter(mascota.fotoUri),
                         contentDescription = "Foto de Mascota",
@@ -171,7 +172,7 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(start = 2.dp, end = 2.dp)
+                        .padding(horizontal = 2.dp)
                 )
             }
 
@@ -272,10 +273,7 @@ fun VideoThumbnail(videoItem: VideoItem, onClick: () -> Unit, onDelete: () -> Un
             modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.TopEnd)
-                .offset(
-                    x = (8).dp,
-                    y = -8.dp
-                )
+                .offset(x = 8.dp, y = (-8).dp)
                 .background(Color(0xFFF0F7FF), CircleShape)
                 .border(BorderStroke(1.dp, Color(0xFFF0F7FF)), CircleShape)
         ) {
@@ -318,6 +316,7 @@ fun AddVideoButton(onAddVideo: () -> Unit) {
     }
 }
 
+@OptIn(UnstableApi::class)
 @Composable
 fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit) {
     val context = LocalContext.current
@@ -325,27 +324,29 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
     var currentIndex by remember { mutableStateOf(initialIndex) }
     val scope = rememberCoroutineScope()
 
-    DisposableEffect(currentIndex) {
-        player.clearMediaItems()
-        player.setMediaItem(MediaItem.fromUri(videos[currentIndex].uri))
-        player.prepare()
-        player.playWhenReady = true
-
-        // Listener para detectar fin del video
-        player.addListener(object : Player.Listener {
+    // Agregar listener una sola vez y liberar el reproductor al salir
+    DisposableEffect(Unit) {
+        val listener = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 if (state == Player.STATE_ENDED) {
-                    // Si es el último video, volver al inicio
                     if (currentIndex < videos.size - 1) {
-                        scope.launch {
-                            currentIndex++
-                        }
+                        currentIndex++
                     }
                 }
             }
-        })
+        }
+        player.addListener(listener)
+        onDispose {
+            player.removeListener(listener)
+            player.release()
+        }
+    }
 
-        onDispose { player.release() }
+    // Actualizar el reproductor cuando cambie el índice del video
+    LaunchedEffect(currentIndex) {
+        player.setMediaItem(MediaItem.fromUri(videos[currentIndex].uri))
+        player.prepare()
+        player.playWhenReady = true
     }
 
     Box(
@@ -354,15 +355,17 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
             .background(Color.Black)
     ) {
         AndroidView(
-            factory = { PlayerView(context).apply {
-                this.player = player
-                useController = true
-                controllerShowTimeoutMs = 3000
-            }},
+            factory = { ctx ->
+                PlayerView(ctx).apply {
+                    this.player = player
+                    useController = true
+                    controllerShowTimeoutMs = 3000
+                }
+            },
             modifier = Modifier.fillMaxSize()
         )
 
-        // Controles de navegación
+        // Controles de navegación y de cierre
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -524,12 +527,3 @@ fun copyUriToFile(context: Context, uri: Uri, file: File) {
         }
     }
 }
-
-
-
-
-
-
-
-
-
