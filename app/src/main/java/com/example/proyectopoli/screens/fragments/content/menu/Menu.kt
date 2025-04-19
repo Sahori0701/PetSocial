@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.proyectopoli.R
 import com.example.proyectopoli.model.MenuItem
 import com.example.proyectopoli.ui.theme.components.DrawerItem
@@ -57,7 +59,7 @@ fun Menu(
     Column(
         modifier = Modifier
 
-            .fillMaxSize()
+            .width(300.dp)
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
@@ -81,12 +83,12 @@ fun Menu(
                     painter = painterResource(id = R.drawable.raster_logo),
                     contentDescription = "Logo",
                     modifier = Modifier
-                        .height(87.dp)
-                        .width(100.dp)
+                        .height(75.dp)
+                        .width(95.dp)
                 )
                 Text(
                     text = stringResource(R.string.raster_string),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 22.sp),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -117,6 +119,8 @@ fun Menu(
                 }
             }
         }
-        Divider()
+
+        Divider(color = Color.Gray, thickness = 1.dp)
+
     }
 }

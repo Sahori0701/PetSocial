@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.proyectopoli.model.MenuItem
 
 @Composable
@@ -52,7 +53,7 @@ fun DrawerItem(
         Spacer(modifier = Modifier.width(24.dp))
         Text(
             text = item.title,
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium.copy(fontSize = 16.sp),
             fontWeight = if (selected) FontWeight.Bold else FontWeight.Bold,
             color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.onSurface
         )

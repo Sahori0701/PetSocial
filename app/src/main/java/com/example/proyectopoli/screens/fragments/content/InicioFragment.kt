@@ -24,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.proyectopoli.R
 
 @Composable
@@ -51,15 +52,15 @@ fun InicioFragment() {
             painter = painterResource(id = R.drawable.catsocial),
             contentDescription = "Gato con un teléfono",
             modifier = Modifier
-                .height(312.dp)
-                .width(217.dp)
+                .height(300.dp)
+                .width(200.dp)
         )}
         Column(modifier = Modifier.weight(1.5f),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally){
             Text(
                 text = stringResource(R.string.app_slogan),
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
@@ -71,12 +72,12 @@ fun InicioFragment() {
                 painter = painterResource(id = R.drawable.raster_logo),
                 contentDescription = "Logo",
                 modifier = Modifier
-                    .height(87.dp)
-                    .width(100.dp)
+                    .height(75.dp)
+                    .width(95.dp)
             )
             Text(
                 text = stringResource(R.string.raster_string),
-                style = MaterialTheme.typography.headlineLarge,
+                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 22.sp),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )

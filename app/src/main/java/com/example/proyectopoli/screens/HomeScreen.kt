@@ -14,6 +14,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.navigation.ContentNavigation
 import com.example.proyectopoli.screens.fragments.content.menu.Menu
@@ -55,7 +56,7 @@ fun HomeScreen() {
                 TopAppBar(
                     title = { Text("PetSocial",
                         color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge ) },
+                        style = MaterialTheme.typography.bodyLarge.copy(fontSize = 20.sp) ) },
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch {

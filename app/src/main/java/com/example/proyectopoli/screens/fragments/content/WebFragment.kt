@@ -41,6 +41,8 @@ import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.filled.ArrowBack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("SetJavaScriptEnabled")
@@ -56,7 +58,6 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
     var fullscreenMode by rememberSaveable { mutableStateOf(false) }
     var mascota by remember { mutableStateOf(MascotaPerfil()) }
     var showWebView by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(Unit) {
         mascotaPreferences.mascotaFlow.collect { mascota = it }
@@ -76,19 +77,23 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
             enter = fadeIn(),
             exit = fadeOut()
         ) {
-            Column( // Columna dentro de AnimatedVisibility
-                modifier = Modifier.fillMaxWidth(),
+            Column( // Main column
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White)
+                    .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Column( // Columna para "Conecta" y foto
+                // Top Section (Conecta and Pet Photo) - Occupies the full width
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .weight(0.9f),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
                         text = "Conecta",
-                        style = MaterialTheme.typography.headlineLarge,
+                        style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -115,81 +120,91 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(color = Color.Gray, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(5.dp))
 
-                OutlinedTextField(
-                    value = searchQuery,
-                    onValueChange = { searchQuery = it },
-                    label = { Text("Buscar") },
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth(0.8f)
-                        .offset(y = (-50).dp),
-                    singleLine = true,
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                if (searchQuery.isNotBlank()) {
-                                    val query = Uri.encode(searchQuery)
-                                    val url = "https://www.google.com/search?q=$query"
-                                    currentUrl = url
-                                    showWebView = true
-                                }
-                            },
-
-                            ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.magnifying_glass),
-                                contentDescription = "Buscar",
-                                tint = Color(0xFF3B5BFE),
-                                modifier = Modifier.size(50.dp)
-
+                        .weight(0.30f)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedTextField(
+                        value = searchQuery,
+                        onValueChange = { searchQuery = it },
+                        label = {
+                            Text(
+                                "Buscar URL",
+                                style = TextStyle(fontSize = 20.sp)
                             )
+                        },
+                        modifier = Modifier.fillMaxWidth(1f),
+                        singleLine = true,
+                        textStyle = TextStyle(fontSize = 15.sp),
+                        trailingIcon = {
+                            IconButton(
+                                onClick = {
+                                    if (searchQuery.isNotBlank()) {
+                                        currentUrl = searchQuery.trim()
+                                        if (!currentUrl.startsWith("http://") && !currentUrl.startsWith("https://")) {
+                                            currentUrl = "https://$currentUrl"
+                                        }
+                                        showWebView = true
+                                    }
+                                },
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.raster_logo),
+                                    contentDescription = "Buscar",
+                                    tint = Color(0xFF3B5BFE),
+                                    modifier = Modifier.size(30.dp)
+                                )
+                            }
                         }
-                    }
-                )
+                    )
+                }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(10.dp))
+                Divider(color = Color.Gray, thickness = 1.dp)
+                Spacer(modifier = Modifier.height(10.dp))
 
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                Column(
+                    modifier = Modifier
+                        .weight(1.5f)
+                        .fillMaxWidth()
+                        .fillMaxHeight(), // Make the Column take up all available vertical space
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                     Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(300.dp)
+                        modifier = Modifier.fillMaxSize(), // Make the Box fill the entire Column
+                        contentAlignment = Alignment.TopCenter // Align the *content* of the Box to the top center
                     ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.web_animals),
+                            contentDescription = "Background Image",
+                            modifier = Modifier.fillMaxSize(), // Make the Image fill the entire Box
+                            contentScale = ContentScale.Crop // Optional: Control how the image is scaled
+                        )
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .zIndex(1f),
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top, // Align items within this Column to the top
+                            modifier = Modifier.padding(top = 20.dp)
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.raster_logo),
                                 contentDescription = "Logo",
                                 modifier = Modifier
-                                    .height(87.dp)
-                                    .width(100.dp)
-                                    .offset(y = (-30).dp)
+                                    .height(75.dp) // Increase height to 75% of original
+                                    .width(95.dp)  // Increase width to 75% of original
                             )
                             Text(
                                 text = stringResource(R.string.raster_string),
-                                style = MaterialTheme.typography.headlineLarge,
+                                style = MaterialTheme.typography.headlineLarge.copy(fontSize = 22.sp), // Increase font size to 75% of original
                                 textAlign = TextAlign.Center,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .offset(y = (-30).dp)
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
-                        Image(
-                            painter = painterResource(id = R.drawable.web_animals),
-                            contentDescription = "Imagen de mascotas",
-                            modifier = Modifier
-                                .height(400.dp)
-                                .fillMaxWidth()
-                                .align(Alignment.Center)
-                                .offset(y = (1).dp),
-                            contentScale = androidx.compose.ui.layout.ContentScale.Crop
-                        )
                     }
                 }
             }
@@ -206,7 +221,43 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                     factory = {
                         WebView(it).apply {
                             settings.javaScriptEnabled = true
-                            webViewClient = WebViewClient()
+                            webViewClient = object : WebViewClient() {
+                                override fun shouldOverrideUrlLoading(
+                                    view: WebView?,
+                                    request: WebResourceRequest?
+                                ): Boolean {
+                                    val url = request?.url?.toString() ?: ""
+                                    view?.loadUrl(url)
+                                    return true
+                                }
+
+                                override fun onPageStarted(
+                                    view: WebView?,
+                                    url: String?,
+                                    favicon: Bitmap?
+                                ): Unit {
+                                    super.onPageStarted(view, url, favicon)
+                                    isLoading = true
+                                }
+
+                                override fun onPageFinished(view: WebView?, url: String?): Unit {
+                                    super.onPageFinished(view, url)
+                                    isLoading = false
+                                }
+
+                                override fun onReceivedError(
+                                    view: WebView?,
+                                    request: WebResourceRequest?,
+                                    error: android.webkit.WebResourceError?
+                                ): Unit {
+                                    Log.e(
+                                        "WebViewError",
+                                        "Error al cargar la página: ${error?.description}"
+                                    )
+                                    // Aquí podrías mostrar un mensaje de error al usuario
+                                    super.onReceivedError(view, request, error)
+                                }
+                            }
                             loadUrl(currentUrl)
                             webView = this
                         }
@@ -216,14 +267,21 @@ fun WebFragment(mascotaPreferences: MascotaPreferences) {
                         webView = it
                     }
                 )
-                // Botón para regresar
+// Botón para regresar con fondo transparente
                 FloatingActionButton(
-                    onClick = { showWebView = false },
+                    onClick = {
+                        showWebView = false
+                        currentUrl = "" // Reinicia la URL
+                        searchQuery = "" // Reinicia el texto de búsqueda
+                        webView?.loadUrl("about:blank") // Limpia el WebView
+                    },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(16.dp)
+                        .padding(5.dp),
+                    containerColor = Color.Black.copy(alpha = 0.05f), // Fondo negro con 30% de opacidad
+                    contentColor = Color.Black // Color del icono
                 ) {
-                    Icon(Icons.Filled.KeyboardArrowDown, "Regresar")
+                    Icon(Icons.Filled.ArrowBack, "Regresar") // Icono de regresar
                 }
             }
         }

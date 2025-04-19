@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.draw.clip
@@ -28,6 +29,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,6 +47,8 @@ import com.example.proyectopoli.data.MascotaPreferences
 import com.example.proyectopoli.model.MascotaPerfil
 import kotlinx.coroutines.launch
 import java.io.File
+import androidx.compose.ui.text.TextStyle
+
 
 data class VideoItem(
     val uri: Uri,
@@ -79,43 +84,111 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
 
     if (showAddDialog && nuevaUri != null) {
         AlertDialog(
+            containerColor = Color.White.copy(alpha = 0.7f),
             onDismissRequest = {
                 showAddDialog = false
                 nuevaUri = null
                 descripcionTemporal = ""
             },
-            title = { Text("Agregar descripción") },
+            title = {
+                Text(
+                    "Descripción",
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.CenterHorizontally)
+                )
+            },
             text = {
                 TextField(
                     value = descripcionTemporal,
                     onValueChange = { descripcionTemporal = it },
-                    label = { Text("Descripción del video") },
-                    modifier = Modifier.fillMaxWidth()
+                    label = {
+                        Text(
+                            "Descripción del video",
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily.Serif,
+                            fontWeight = FontWeight.Normal
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White.copy(alpha = 0.7f)),
+                    textStyle = TextStyle(fontSize = 16.sp, fontFamily = FontFamily.Serif)
                 )
             },
             confirmButton = {
-                Button(onClick = {
-                    nuevaUri?.let { uri ->
-                        videos = videos + VideoItem(uri, descripcionTemporal)
-                        saveVideos(context, videos)
-                        Toast.makeText(context, "Video agregado", Toast.LENGTH_SHORT).show()
-                        showAddDialog = false
-                        nuevaUri = null
-                        descripcionTemporal = ""
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            nuevaUri?.let { uri ->
+                                videos = videos + VideoItem(uri, descripcionTemporal)
+                                saveVideos(context, videos)
+                                Toast.makeText(context, "Video agregado", Toast.LENGTH_SHORT).show()
+                                showAddDialog = false
+                                nuevaUri = null
+                                descripcionTemporal = ""
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF3B5BFE).copy(alpha = 0.8f),
+                            contentColor = Color.White
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            "Guardar",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color.White
+                        )
                     }
-                }) {
-                    Text("Guardar")
                 }
             },
             dismissButton = {
-                Button(onClick = {
-                    showAddDialog = false
-                    nuevaUri = null
-                    descripcionTemporal = ""
-                }) {
-                    Text("Cancelar")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            showAddDialog = false
+                            nuevaUri = null
+                            descripcionTemporal = ""
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF3B5BFE).copy(alpha = 0.8f),
+                            contentColor = Color.White
+                        ),
+                        shape = MaterialTheme.shapes.medium,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp)
+                    ) {
+                        Text(
+                            "Cancelar",
+                            style = MaterialTheme.typography.bodySmall.copy(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            color = Color.White
+                        )
+                    }
                 }
-            }
+            },
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
 
@@ -144,12 +217,12 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(0.8f),
+                    .weight(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = "Videos",
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 30.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -168,7 +241,7 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                 Spacer(modifier = Modifier.height(0.5.dp))
                 Text(
                     text = stringResource(R.string.videos),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 17.sp),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -178,12 +251,12 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
 
             Spacer(modifier = Modifier.height(10.dp))
             Divider(color = Color.Gray, thickness = 1.dp)
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(0.dp))
 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(1.5f)
+                    .weight(1.4f)
                     .background(Color(0xFFF0F7FF)),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -212,7 +285,7 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(0.dp))
             Divider(color = Color.Gray, thickness = 1.dp)
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -226,12 +299,12 @@ fun VideosFragment(mascotaPreferences: MascotaPreferences) {
                     painter = painterResource(id = R.drawable.raster_logo),
                     contentDescription = "Logo",
                     modifier = Modifier
-                        .height(87.dp)
-                        .width(100.dp)
+                        .height(75.dp)
+                        .width(95.dp)
                 )
                 Text(
                     text = stringResource(R.string.raster_string),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineLarge.copy(fontSize = 22.sp),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -376,7 +449,8 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
                 onClick = { onClose() },
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape)
+                    .background(Color.Black.copy(alpha = 0.8f), shape = CircleShape)
+                    .size(50.dp)
             ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "Volver", tint = Color.White)
             }
@@ -384,7 +458,7 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
             Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape)
+                    .background(Color.Black.copy(alpha = 0.8f), shape = CircleShape)
                     .padding(horizontal = 12.dp, vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -406,7 +480,8 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
 
                 Text(
                     text = "${currentIndex + 1}/${videos.size}",
-                    color = Color.White
+                    color = Color.White,
+                    fontSize = 18.sp
                 )
 
                 IconButton(
@@ -431,11 +506,12 @@ fun VideoPlayer(videos: List<VideoItem>, initialIndex: Int, onClose: () -> Unit)
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.BottomCenter)
-                .background(Color.Black.copy(alpha = 0.7f))
+                .background(Color.Black.copy(alpha = 0.8f))
                 .padding(16.dp)
         ) {
             Text(
                 text = videos[currentIndex].descripcion,
+                fontSize = 18.sp,
                 color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
