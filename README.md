@@ -20,14 +20,14 @@ Una red social para compartir momentos especiales de tus mascotas, creada en **A
 ---
 
 ## ℹ️ Presentación de la Aplicación
-[![Ver Presentación](https://img.shields.io/badge/Ver-Presentación-orange)](Sahori0701/PetSocial/releases/download/v1.0.0/PetSocial.pptx)
+[![Ver Presentación](https://img.shields.io/badge/Ver-Presentación-orange)](https://github.com/Sahori0701/PetSocial/releases/download/v1.0.0/PetSocial.pptx)
 
 > Explora la presentación detallada de PetSocial (PowerPoint).
 
 ---
 
 ## 📖 Manual de Usuario
-[![Descargar Manual](https://img.shields.io/badge/Descargar-Manual-green)](Sahori0701/PetSocial/releases/download/v1.0.0/ManualPetSocial.pdf)
+[![Descargar Manual](https://img.shields.io/badge/Descargar-Manual-green)](https://github.com/Sahori0701/PetSocial/releases/download/v1.0.0/ManualPetSocial.pdf)
 
 > Consulta el manual de usuario completo en formato PDF.
 
