@@ -34,7 +34,7 @@ Una red social para compartir momentos especiales de tus mascotas, creada en **A
 ---
 
 ## 📄 Documento de la Aplicación
-[![Ver Documento](https://img.shields.io/badge/Ver-Documento-lightgrey)](URL_DEL_DOCUMENTO_WORD)
+[![Ver Documento](https://img.shields.io/badge/Ver-Documento-lightgrey)]([URL_DEL_DOCUMENTO_WORD](https://github.com/Sahori0701/PetSocial/releases/download/v1.0.0/Documento.Maestro.ProgMovB01-G11.docx)
 
 > Accede al documento completo de la aplicación (Word).
 
