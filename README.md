@@ -27,7 +27,7 @@ Una red social para compartir momentos especiales de tus mascotas, creada en **A
 ---
 
 ## 📖 Manual de Usuario
-[![Descargar Manual](https://img.shields.io/badge/Descargar-Manual-green)](Sahori0701/PetSocial/releases/download/v1.0.0/ManualPetSocial.mp4)
+[![Descargar Manual](https://img.shields.io/badge/Descargar-Manual-green)](Sahori0701/PetSocial/releases/download/v1.0.0/ManualPetSocial.pdf)
 
 > Consulta el manual de usuario completo en formato PDF.
 
