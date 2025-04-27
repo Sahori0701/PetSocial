@@ -1,9 +1,7 @@
----
-
 # 🐾 PetSocial
 
-¡Bienvenido a **PetSocial**!  
-Una red social para compartir momentos especiales de tus mascotas, creada en **Android** usando **Kotlin**. 📱🐶🐱
+¡Bienvenido a **PetSocial**! 🐶🐱
+Una red social para compartir momentos especiales de tus mascotas, creada en **Android** usando **Kotlin**. 📱
 
 ---
 
@@ -19,5 +17,25 @@ Una red social para compartir momentos especiales de tus mascotas, creada en **A
 
 > Mira cómo funciona PetSocial en acción.
 
+---
+
+## ℹ️ Presentación de la Aplicación
+[![Ver Presentación](https://img.shields.io/badge/Ver-Presentación-orange)](Sahori0701/PetSocial/releases/download/v1.0.0/PetSocial.pptx)
+
+> Explora la presentación detallada de PetSocial (PowerPoint).
+
+---
+
+## 📖 Manual de Usuario
+[![Descargar Manual](https://img.shields.io/badge/Descargar-Manual-green)](Sahori0701/PetSocial/releases/download/v1.0.0/ManualPetSocial.mp4)
+
+> Consulta el manual de usuario completo en formato PDF.
+
+---
+
+## 📄 Documento de la Aplicación
+[![Ver Documento](https://img.shields.io/badge/Ver-Documento-lightgrey)](URL_DEL_DOCUMENTO_WORD)
+
+> Accede al documento completo de la aplicación (Word).
 
 ---
